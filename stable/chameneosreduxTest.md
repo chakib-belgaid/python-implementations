@@ -1,0 +1,16 @@
+# chameneosredux
+- [X] python2
+- [X] python3
+- [X] intelpython2
+- [X] intelpython3
+- [ ] ipy
+- [X] activepython
+- [X] micropython
+- [X] pypy2
+- [X] pypy3
+- [ ] graalpython
+- [X] numba
+- [ ] shedskin
+- [X] nuitka
+- [X] cython2
+- [X] cython3
