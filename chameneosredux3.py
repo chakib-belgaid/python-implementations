@@ -5,7 +5,7 @@
 
 import sys
 import _thread
-import utime
+import time
 
 # colors and matching
 creature_colors = ['blue', 'red', 'yellow']
@@ -85,7 +85,7 @@ def let_them_meet(meetings_left, input_zoo,
     for ci in range(c_no):
         args = (ci, venue, locks[ci].acquire, in_lock_acquire, out_lock_release)
         new = _thread.start_new_thread(creature, args)
-    utime.sleep(0.05)     # to reduce work-load imbalance
+    time.sleep(0.05)     # to reduce work-load imbalance
     
     in_lock_release()   # signal "meeting_place open for registration"
     out_lock_acquire()  # only proceed with a "registration ok" signal
@@ -110,9 +110,8 @@ def let_them_meet(meetings_left, input_zoo,
         else:
             report(input_zoo, met, self_met)
 
-           
-def chameneosiate(n):
-
+def main(n):
+    
     check_complement()
     let_them_meet(n, ['blue', 'red', 'yellow'])
     let_them_meet(n, ['blue', 'red', 'yellow', 'red', 'yellow',
@@ -120,4 +119,16 @@ def chameneosiate(n):
     #print ''
 
 
-chameneosiate(int(sys.argv[1]))       
+
+if __name__ == '__main__':
+    param =int(sys.argv[1] ) if len(sys.argv ) > 1 else 6000000
+    warmup = int(sys.argv[2]) if len(sys.argv ) > 2 else 0
+    mainloop = int(sys.argv[3]) if len(sys.argv ) >3 else 1    
+    # warmup 
+    print(param+warmup+mainloop)
+    print("--++beginwarmup")
+    for i in range(warmup): 
+        main(param)
+    print("++--endwarmup")
+    for i in range(mainloop) : 
+        main(param)
