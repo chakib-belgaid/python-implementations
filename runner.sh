@@ -46,13 +46,12 @@ micropython
 pypy2
 pypy3
 graalpython
-numba
+# numba
 shedskin
 nuitka
 cython2
 cython3
 )
-
 
 benchs=(
     tommti
@@ -64,7 +63,7 @@ getbench(){
     benchs=(
         'tommti:intArithmetic_0_1'
         'binarytrees:2_0_1'
-        'chameneosredux:60000_0_1'
+        'chameneosredux:60_0_1'
     )
     benchname=$1 
 
@@ -101,10 +100,42 @@ if [ -z $name ] ; then
 
 
 
+function ispython3 ()
+{ py3interpereters=(
+'python3'
+'intelpython3'
+'pypy3'
+'cython3'
+'nuitka '
+'shedskin'
+'activepython'
+'numba'
+)
+
+    for i in ${py3interpereters[@]} ; do 
+    # echo $i $intername
+        if [[ $i == $intername ]]; then  
+            # echo $i $intername
+            return 0
+
+        fi 
+    done 
+    
+    return 1
+
+}
+
+
 preparetest() {
     intername=$1
     testname=$2
-
+    # ispy3= $(ispython3 $intername )
+    ispython3 && testname=$testname'3'
+    # if [ ispython3 ] ; then 
+        # testname=$testname'3'
+    # fi 
+    echo ${testname%*3}
+    # exit 
     ls $testname >/dev/null|| mkdir $testname
     case "$intername" in 
         "micropython") 
@@ -167,6 +198,14 @@ generateDockerfile()
 
 }
 
+generateTestfile()
+{
+    echo '# '$benchname > $benchname'Test.md'
+    for i in ${interpreters[@]}; do 
+        echo '- [ ] '$i >> $benchname'Test.md'
+    done 
+}
+
 test(){
     intername=$1 
     benchname=$2 
@@ -196,9 +235,10 @@ test(){
     echo $x 
     if [ $x == 0 ] ; then 
         echo "$benchname"Test.md;
-        sed   "s/\- \[ \] $intername /\- \[X\] $intername / "  "$benchname"Test.md > tmp.log 
+        sed   "s/\- \[ \] $intername/\- \[X\] $intername/ "  "$benchname"Test.md > tmp.log 
         cat tmp.log >  "$benchname"Test.md 
         rm -f tmp.log
+        echo  yeahh
         # echo "- [X] $intername " >> "$benchname"Test.md; 
     # else 
         # echo "- [ ] $intername " >> "$benchname"Test.md; 
@@ -213,6 +253,7 @@ if [ -z $benchname ] ; then
 fi;
 
 if [ -z $inter ] ; then 
+    generateTestfile
     # echo "# $benchname" > "$benchname"Test.md; 
     for i in ${interpreters[@]}; do 
     
@@ -228,6 +269,7 @@ if [ -z $inter ] ; then
 else 
     test $inter $benchname
 fi 
+
 
 
 
