@@ -57,12 +57,14 @@ cython3
 benchs=(
     tommti
     binarytrees
+    chameneosredux
 )
 
 getbench(){ 
     benchs=(
         'tommti:intArithmetic_0_1'
         'binarytrees:2_0_1'
+        'chameneosredux:60000_0_1'
     )
     benchname=$1 
 
@@ -207,7 +209,7 @@ test(){
 inter=$1
 benchname=$2 
 if [ -z $benchname ] ; then 
-    benchname="binarytrees"
+    benchname="chameneosredux"
 fi;
 
 if [ -z $inter ] ; then 

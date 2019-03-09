@@ -7,9 +7,12 @@ import sys
 import thread
 import time
 
+##lib--from numba import jit 
+
 # colors and matching
 creature_colors = ['blue', 'red', 'yellow']
 
+##lib--@jit
 def complement(c1, c2):
 
     if c1 == c2: return c1
@@ -28,6 +31,7 @@ compl_dict = dict(((c1, c2), complement(c1, c2))
                   for c2 in creature_colors)
 
 
+##lib--@jit
 def check_complement(colors=creature_colors, compl=compl_dict):
 
     for c1 in colors:
@@ -36,7 +40,8 @@ def check_complement(colors=creature_colors, compl=compl_dict):
     print('')
 
 
-# reporting
+
+##lib--@jit# reporting
 def spellout(n):
     
     numbers = ['zero', 'one', 'two', 'three', 'four',
@@ -44,6 +49,7 @@ def spellout(n):
     return ' ' + ' '.join(numbers[int(c)] for c in str(n))
 
 
+##lib--@jit
 def report(input_zoo, met, self_met):
 
     print(' ' + ' '.join(input_zoo))
@@ -52,7 +58,8 @@ def report(input_zoo, met, self_met):
     print(spellout(sum(met)) + '\n')
 
 
-# the zoo
+
+##lib--@jit# the zoo
 def creature(my_id, venue, my_lock_acquire, in_lock_acquire, out_lock_release):
 
     while True:
@@ -62,6 +69,7 @@ def creature(my_id, venue, my_lock_acquire, in_lock_acquire, out_lock_release):
         out_lock_release()  # signal "registration ok"
 
 
+##lib--@jit
 def let_them_meet(meetings_left, input_zoo,
                   compl=compl_dict, allocate=thread.allocate_lock):
     # prepare
@@ -110,8 +118,9 @@ def let_them_meet(meetings_left, input_zoo,
         else:
             report(input_zoo, met, self_met)
 
-           
-def chameneosiate(n):
+
+          
+def main(n):
 
     check_complement()
     let_them_meet(n, ['blue', 'red', 'yellow'])
@@ -120,4 +129,18 @@ def chameneosiate(n):
     #print ''
 
 
-chameneosiate(int(sys.argv[1]))       
+
+if __name__ == '__main__':
+    param =int(sys.argv[1] ) if len(sys.argv ) > 1 else 6000000
+    warmup = int(sys.argv[2]) if len(sys.argv ) > 2 else 0
+    mainloop = int(sys.argv[3]) if len(sys.argv ) >3 else 1    
+    # warmup 
+    print(param+warmup+mainloop)
+    print("--++beginwarmup")
+    for i in range(warmup): 
+        main(param)
+    print("++--endwarmup")
+    for i in range(mainloop) : 
+        main(param)
+    
+
