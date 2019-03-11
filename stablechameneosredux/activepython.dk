@@ -1,0 +1,7 @@
+
+FROM chakibmed/activepython:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.activepython chameneosredux
+ENTRYPOINT ["/opt/ActivePython-3.6/bin/python3.6","chameneosredux"]
+CMD ["60", "0", "1"]
+    

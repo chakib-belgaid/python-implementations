@@ -1,0 +1,7 @@
+
+FROM chakibmed/micropython:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.micropython chameneosredux
+ENTRYPOINT ["micropython","chameneosredux"]
+CMD ["60", "0", "1"]
+    

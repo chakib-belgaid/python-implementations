@@ -80,7 +80,7 @@ getbench(){
 
 }
 
-while getopts "n:p" o; do
+while getopts "n:p:d" o; do
     case "${o}" in
         n)
             name=${OPTARG}
@@ -88,6 +88,9 @@ while getopts "n:p" o; do
         p) 
             prepare=1 
             ;; 
+        d)
+            generatedocker=1
+            ;;
     esac
 done
 
@@ -195,16 +198,11 @@ preparetest() {
     esac
 }
 
-generateDockerfile()
-{    intername=$1 
-     benchname=$2
-
-
-}
 
 generateTestfile()
 {
     echo '# '$benchname > $benchname'Test.md'
+    mkdir -p "stable"$benchname"/pythonfiles" 
     for i in ${interpreters[@]}; do 
         echo '- [ ] '$i >> $benchname'Test.md'
     done 
@@ -242,9 +240,10 @@ test(){
         sed   "s/\- \[ \] $intername/\- \[X\] $intername/ "  "$benchname"Test.md > tmp.log 
         cat tmp.log >  "$benchname"Test.md 
         rm -f tmp.log
-        echo  yeahh
+        cp $benchname/$benchname.$intername "stable"$benchname/'pythonfiles'/$benchname.$intername 
         # echo "- [X] $intername " >> "$benchname"Test.md; 
     # else 
+        # mv "$benchname"/
         # echo "- [ ] $intername " >> "$benchname"Test.md; 
     fi 
     
@@ -269,7 +268,12 @@ if [ -z $inter ] ; then
     # echo "----$interpreter----" >> "$benchname"Test.txt
     # (time $interpreter $benchname/$benchname.$i $(getbench "$benchname") 2>"$benchname".log ) || echo "error" >> "$benchname"Test.txt 
         test $i $benchname;
+        # echo $i $benchname;
     done 
+    if [ "$generatedocker" != "" ]; then 
+        # echo yolo
+        python generator.py $benchname $(getbench "$benchname")
+    fi 
 else 
     test $inter $benchname
 fi 

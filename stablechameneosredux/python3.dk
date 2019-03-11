@@ -1,0 +1,7 @@
+
+FROM chakibmed/python3:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.python3 chameneosredux
+ENTRYPOINT ["/usr/bin/python3","chameneosredux"]
+CMD ["60", "0", "1"]
+    

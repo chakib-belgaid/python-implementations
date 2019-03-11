@@ -1,0 +1,7 @@
+
+FROM chakibmed/cython3:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.cython3 chameneosredux
+ENTRYPOINT ["./chameneosredux"]
+CMD ["60", "0", "1"]
+    

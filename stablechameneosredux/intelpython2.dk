@@ -1,0 +1,7 @@
+
+FROM chakibmed/intelpython2:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.intelpython2 chameneosredux
+ENTRYPOINT ["/intelPython/intelpython2/bin/python","chameneosredux"]
+CMD ["60", "0", "1"]
+    

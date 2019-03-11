@@ -1,0 +1,7 @@
+
+FROM chakibmed/nuitka:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.nuitka chameneosredux
+ENTRYPOINT ["./chameneosredux"]
+CMD ["60", "0", "1"]
+    

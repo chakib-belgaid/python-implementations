@@ -1,0 +1,7 @@
+
+FROM chakibmed/jython:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.jython chameneosredux
+ENTRYPOINT ["jython","chameneosredux"]
+CMD ["60", "0", "1"]
+    

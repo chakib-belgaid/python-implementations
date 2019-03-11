@@ -1,0 +1,7 @@
+
+FROM chakibmed/graalpython:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.graalpython chameneosredux
+ENTRYPOINT ["/usr/bin/graalpython","chameneosredux"]
+CMD ["60", "0", "1"]
+    

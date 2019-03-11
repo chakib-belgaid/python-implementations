@@ -1,0 +1,7 @@
+
+FROM chakibmed/ipy:1.0
+WORKDIR /test
+ADD pythonfiles/chameneosredux.ipy chameneosredux
+ENTRYPOINT ["ipy","chameneosredux"]
+CMD ["60", "0", "1"]
+    
