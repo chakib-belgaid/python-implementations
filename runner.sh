@@ -255,6 +255,16 @@ if [ -z $benchname ] ; then
     benchname="chameneosredux"
 fi;
 
+if [ "$generatedocker" != "" ]; then 
+        # echo yolo
+        mkdir -p "stable"$benchname"/recap" 
+        mv "$benchname"Test.md   "stable"$benchname"/recap"/ 
+        mv "$benchname"*.py "stable"$benchname"/recap"/
+        python generator.py $benchname $(getbench "$benchname")
+        rm "$benchname".log
+        exit 
+fi 
+
 if [ -z $inter ] ; then 
     generateTestfile
     # echo "# $benchname" > "$benchname"Test.md; 
@@ -270,10 +280,7 @@ if [ -z $inter ] ; then
         test $i $benchname;
         # echo $i $benchname;
     done 
-    if [ "$generatedocker" != "" ]; then 
-        # echo yolo
-        python generator.py $benchname $(getbench "$benchname")
-    fi 
+
 else 
     test $inter $benchname
 fi 
