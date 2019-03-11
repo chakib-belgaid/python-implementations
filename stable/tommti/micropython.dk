@@ -1,0 +1,7 @@
+
+FROM chakibmed/micropython:1.0
+WORKDIR /test
+ADD pythonfiles/tommti.micropython tommti
+ENTRYPOINT ["micropython","tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

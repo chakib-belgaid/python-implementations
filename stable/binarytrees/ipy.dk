@@ -1,0 +1,7 @@
+
+FROM chakibmed/ipy:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.ipy binarytrees
+ENTRYPOINT ["ipy","binarytrees"]
+CMD ["2", "0", "1"]
+    

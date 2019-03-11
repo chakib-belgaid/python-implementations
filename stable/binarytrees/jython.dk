@@ -1,0 +1,7 @@
+
+FROM chakibmed/jython:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.jython binarytrees
+ENTRYPOINT ["jython","binarytrees"]
+CMD ["2", "0", "1"]
+    

@@ -1,0 +1,7 @@
+
+FROM chakibmed/micropython:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.micropython binarytrees
+ENTRYPOINT ["micropython","binarytrees"]
+CMD ["2", "0", "1"]
+    

@@ -1,0 +1,7 @@
+
+FROM chakibmed/python3:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.python3 binarytrees
+ENTRYPOINT ["/usr/bin/python3","binarytrees"]
+CMD ["2", "0", "1"]
+    

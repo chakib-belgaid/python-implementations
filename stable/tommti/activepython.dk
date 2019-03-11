@@ -1,0 +1,7 @@
+
+FROM chakibmed/activepython:1.0
+WORKDIR /test
+ADD pythonfiles/tommti.activepython tommti
+ENTRYPOINT ["/opt/ActivePython-3.6/bin/python3.6","tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

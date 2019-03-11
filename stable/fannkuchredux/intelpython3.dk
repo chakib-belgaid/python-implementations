@@ -1,0 +1,7 @@
+
+FROM chakibmed/intelpython3:1.0
+WORKDIR /test
+ADD pythonfiles/fannkuchredux.intelpython3 fannkuchredux
+ENTRYPOINT ["/intelPython/intelpython3/bin/python","fannkuchredux"]
+CMD ["10", "0", "16"]
+    

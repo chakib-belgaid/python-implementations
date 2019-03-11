@@ -1,0 +1,7 @@
+
+FROM chakibmed/jython:1.0
+WORKDIR /test
+ADD pythonfiles/tommti.jython tommti
+ENTRYPOINT ["jython","tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

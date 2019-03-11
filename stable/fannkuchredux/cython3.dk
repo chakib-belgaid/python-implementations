@@ -1,0 +1,7 @@
+
+FROM chakibmed/cython3:1.0
+WORKDIR /test
+ADD pythonfiles/fannkuchredux.cython3 fannkuchredux
+ENTRYPOINT ["./fannkuchredux"]
+CMD ["10", "0", "16"]
+    

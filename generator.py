@@ -6,7 +6,7 @@ from shutil import copyfile
 
 compilers=['shedskin','cython2','cython3','nuitka']
 # compilers=[]
-interpreters=["python2" ,"python3" ,"ipy" ,"jython" ,"activepython" ,"micropython" ,"pypy2" ,"pypy3" ,"graalpython" ,"numba","intelpython2","intelpython3" ]
+interpreters=["python2" ,"python3" ,"ipy" ,"jython" ,"activepython" ,"micropython" ,"pypy2" ,"pypy3" ,"graalpython" ,"numba2","numba3","intelpython2","intelpython3" ]
 
 # def main(): 
 #     # filename= sys.argv[0] 
@@ -59,6 +59,8 @@ USER awesome
 def getEntryPoint(implem,bench):
     paths={   "python2":"/usr/bin/python2",
         "python3":"/usr/bin/python3",
+        "numba2":"/usr/bin/python2",
+        "numba3":"/usr/bin/python3",
         "ipy":"ipy",
         "jython":"jython",
         "micropython":"micropython",
@@ -83,7 +85,7 @@ def getEntryPoint(implem,bench):
 
 def generateTestImages(implementations=compilers+interpreters, benchmark="tommti",args= ["intArithmetic","0","1"]): 
     
-    path="stable"+benchmark
+    path="stable/"+benchmark
     copyfile('dockerbuild.sh',path+'/dockerbuild.sh')
     os.chmod(path+'/dockerbuild.sh',0755)
     template="""
@@ -93,7 +95,7 @@ ADD pythonfiles/{1}.{0} {1}
 ENTRYPOINT [{2}]
 CMD {3}
     """
-    for implem in compilers+interpreters : 
+    for implem in implementations : 
         # print (implem) 
         with open(path+'/'+implem+'.dk','w+') as f :
             l=template.format(implem,benchmark,getEntryPoint(implem,benchmark),args)
@@ -110,8 +112,10 @@ CMD {3}
 
 
 def generatelaucher(implementations=compilers+interpreters, benchmark="tommti",args= ["intArithmetic","0","1"]): 
-    # implementations= [i.split('.')[1] for i in os.listdir("stable"+benchmark) ]
-    path="stable"+benchmark
+    # print(implementations)
+    # return 
+    # implementations= [i.split('.')[1] for i in os.listdir("stable/"+benchmark) ]
+    path="stable/"+benchmark
     filename='launcher.'+benchmark+'.sh'
     template= """
 min=2 
@@ -173,7 +177,7 @@ shutdown
 def main(): 
     benchmark = sys.argv[1] if len (sys.argv) > 1 else 'tommti' 
     args = sys.argv[2:] if len(sys.argv) >2 else ["intArithmetic","0","1"]
-    implementations= [i.split('.')[1] for i in os.listdir("stable"+benchmark+'/pythonfiles') ]
+    implementations= [i.split('.')[1] for i in os.listdir("stable/"+benchmark+'/pythonfiles') ]
     # print (implementations)
     # print(args)
     generateTestImages(implementations,benchmark,args)

@@ -1,0 +1,7 @@
+
+FROM chakibmed/pypy2:1.0
+WORKDIR /test
+ADD pythonfiles/tommti.pypy2 tommti
+ENTRYPOINT ["/usr/bin/pypy","tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

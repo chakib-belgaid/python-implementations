@@ -1,0 +1,7 @@
+
+FROM chakibmed/nuitka:1.0
+WORKDIR /test
+ADD pythonfiles/fannkuchredux.nuitka fannkuchredux
+ENTRYPOINT ["./fannkuchredux"]
+CMD ["10", "0", "16"]
+    

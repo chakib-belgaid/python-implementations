@@ -1,0 +1,7 @@
+
+FROM chakibmed/activepython:1.0
+WORKDIR /test
+ADD pythonfiles/fannkuchredux.activepython fannkuchredux
+ENTRYPOINT ["/opt/ActivePython-3.6/bin/python3.6","fannkuchredux"]
+CMD ["10", "0", "16"]
+    

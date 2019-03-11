@@ -4,6 +4,8 @@ getPath() {
     paths=(   
     "python2:/usr/bin/python2"
     "python3:/usr/bin/python3"
+    "numba2:/usr/bin/python2"
+    "numba3:/usr/bin/python3"
     "ipy:ipy"
     "jython:jython"
     "micropython:micropython"
@@ -40,30 +42,34 @@ python3
 intelpython2
 intelpython3
 ipy
-# jython
+jython
 activepython
 micropython
 pypy2
 pypy3
 graalpython
-numba
+# numba
 shedskin
 nuitka
 cython2
 cython3
+numba2 
+numba3 
 )
 
 benchs=(
     tommti
     binarytrees
     chameneosredux
+    fannkuchredux
 )
 
 getbench(){ 
     benchs=(
-        'tommti:intArithmetic_0_1'
+        'tommti:intArithmetic_0_50'
         'binarytrees:2_0_1'
         'chameneosredux:60_0_1'
+        'fannkuchredux:10_0_16'
     )
     benchname=$1 
 
@@ -80,7 +86,7 @@ getbench(){
 
 }
 
-while getopts "n:p:d" o; do
+while getopts "n:pd" o; do
     case "${o}" in
         n)
             name=${OPTARG}
@@ -113,6 +119,7 @@ function ispython3 ()
 # 'shedskin'
 'activepython'
 'numba'
+'numba3'
 'micropython'
 'graalpython'
 )
@@ -143,48 +150,53 @@ preparetest() {
     # echo ${testname%*3}
     # exit 
     echo $testname
-    ls $dirname >/dev/null|| mkdir $dirname
+    ls sources/$dirname >/dev/null|| mkdir sources/$dirname
     case "$intername" in 
         "micropython") 
-            sed 's/time/utime/g' $testname.py > $dirname/$dirname.$intername ;;
+            sed 's/time/utime/g' $testname.py > "sources/"$dirname/$dirname"."$intername ;;
         "cython2")
-            docker run --rm -dt --name "$intername"_compiler chakibmed/$intername:1.0
+            docker run --rm -t --name "$intername"_compiler chakibmed/$intername:1.0
             docker exec -u root "$intername"_compiler mkdir /$testname && docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $testname.py  "$intername"_compiler:/$testname/$testname.py
             docker exec  "$intername"_compiler $intername -3 --embed -o $testname/$testname"_$intername".c /$testname/$testname.py && docker exec  "$intername"_compiler   gcc  -I /usr/include/python2.7 -O3 -o /$testname/$testname".$intername" /$testname/$testname"_$intername".c -lpython2.7 -lm -lutil -ldl 
             docker cp "$intername"_compiler:/$testname/$testname".$intername" $dirname/$dirname".$intername"
             docker stop "$intername"_compiler ;
+            docker rm -f "$intername"_compiler ;
             ;;
         "cython3")
-            docker run --rm -dt --name "$intername"_compiler chakibmed/$intername:1.0
+            docker run --rm -t --name "$intername"_compiler chakibmed/$intername:1.0
             docker exec -u root "$intername"_compiler mkdir /$testname && docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $testname.py  "$intername"_compiler:/$testname/$testname.py
             docker exec  "$intername"_compiler $intername -3 --embed -o $testname/$testname"_$intername".c /$testname/$testname.py && docker exec  "$intername"_compiler   gcc  -I /usr/include/python3.7m -O3 -o $testname/$testname".$intername" $testname/$testname"_$intername".c -lpython3.7m -lm -lutil -ldl
             docker cp "$intername"_compiler:/$testname/$testname".$intername" $dirname/$dirname".$intername"
             docker stop "$intername"_compiler ;
+            docker rm -f "$intername"_compiler ;
             # cython3 -3 --embed -o $dirname/$testname"_cython3".c $testname.py && gcc  -I /usr/include/python3.7m -O3 -o $dirname/$testname".cython3" $dirname/$testname"_cython3".c -lpython3.7m -lm -lutil -ldl && rm -f $dirname/$testname"_cython3".c 
             ;;
         "numba")
-            sed 's/##lib--//g' $testname.py > $dirname/$dirname.$intername ;;
+            sed 's/##lib--//g' $testname.py > "sources/"$dirname/$dirname"."$intername ;;
         "nuitka") 
-            docker run --rm -dt --name "$intername"_compiler chakibmed/"$intername":1.0
+            docker run --rm -t --name "$intername"_compiler chakibmed/"$intername":1.0
             docker exec -u root "$intername"_compiler mkdir /$testname 
             docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $testname.py  "$intername"_compiler:/$testname/$testname.py
             docker exec -u root "$intername"_compiler nuitka3 --remove-output -o /$testname/$testname"."$intername  /$testname/$testname.py 
-            docker cp "$intername"_compiler:/$testname/$testname"."$intername $dirname/$dirname"."$intername
+            docker cp "$intername"_compiler:/$testname/$testname"."$intername "sources/"$dirname/$dirname"."$intername
             docker stop "$intername"_compiler ;
+            docker rm -f "$intername"_compiler ;
+            
             ;; 
         "shedskin")
-            docker run --rm -dt --name "$intername"_compiler chakibmed/"$intername":1.0
+            docker run --rm -t --name "$intername"_compiler chakibmed/"$intername":1.0
             docker exec -u root "$intername"_compiler mkdir /$testname && docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $intername/$testname.$intername.py  "$intername"_compiler:/$testname/$testname.py
             docker exec -w /$testname -u root "$intername"_compiler shedskin -o -g  "$testname".py  && \
             docker exec -w /$testname -u root "$intername"_compiler sed -i 's/LFLAGS=-lgc -lpcre/LFLAGS=-lgc -lpcre -lgccpp/' Makefile && \
             docker exec -w /$testname -u root "$intername"_compiler sed -i  's/CCFLAGS=-O2/CCFLAGS=-O3/' Makefile
             docker exec -w /$testname -u root "$intername"_compiler make 
-            docker cp "$intername"_compiler:/$testname/$testname $dirname/$dirname"."$intername
+            docker cp "$intername"_compiler:/$testname/$testname "sources/"$dirname/$dirname"."$intername
             docker stop "$intername"_compiler ;
+            docker rm -f "$intername"_compiler ;
 
 
             # shedskin -o -g  $testname"_shedskin.py"  
@@ -194,7 +206,7 @@ preparetest() {
             # cd ../
             ;; 
         *)
-            cp "$testname".py $dirname/$dirname"."$intername ;;
+            cp "$testname".py "sources/"$dirname/$dirname"."$intername ;;
     esac
 }
 
@@ -202,7 +214,7 @@ preparetest() {
 generateTestfile()
 {
     echo '# '$benchname > $benchname'Test.md'
-    mkdir -p "stable"$benchname"/pythonfiles" 
+    mkdir -p "stable"/$benchname"/pythonfiles" 
     for i in ${interpreters[@]}; do 
         echo '- [ ] '$i >> $benchname'Test.md'
     done 
@@ -221,7 +233,7 @@ test(){
 
     case "$intername" in 
     "nuitka" | "cython2" | "cython3"|"shedskin") 
-        (time docker run  -v"$(pwd)":/data --rm -it  chakibmed/$intername:1.0 /data/$benchname/$benchname"."$intername $bench_params 2>> "$benchname".log  )
+        (time docker run  -v"$(pwd)":/data --rm -it  chakibmed/$intername:1.0 /data/sources/$benchname/$benchname"."$intername $bench_params 2>> "$benchname".log  )
         x=$?
         ;; 
     # "shedskin")
@@ -230,7 +242,7 @@ test(){
     #    ;; 
     *) 
         interpreter=$(getPath $intername)  ||  exit 1  
-        (time docker run  -v"$(pwd)":/data --rm -it chakibmed/$intername:1.0 $interpreter /data/$benchname/$benchname.$intername $bench_params 2>>"$benchname".log )
+        (time docker run  -v"$(pwd)":/data --rm -it chakibmed/$intername:1.0 $interpreter /data/sources/$benchname/$benchname.$intername $bench_params 2>>"$benchname".log )
         x=$?
     ;;
     esac 
@@ -240,7 +252,7 @@ test(){
         sed   "s/\- \[ \] $intername/\- \[X\] $intername/ "  "$benchname"Test.md > tmp.log 
         cat tmp.log >  "$benchname"Test.md 
         rm -f tmp.log
-        cp $benchname/$benchname.$intername "stable"$benchname/'pythonfiles'/$benchname.$intername 
+        cp sources/$benchname/$benchname.$intername "stable"/$benchname/'pythonfiles'/$benchname.$intername 
         # echo "- [X] $intername " >> "$benchname"Test.md; 
     # else 
         # mv "$benchname"/
@@ -252,14 +264,14 @@ test(){
 inter=$1
 benchname=$2 
 if [ -z $benchname ] ; then 
-    benchname="chameneosredux"
+    benchname="binarytrees"
 fi;
 
 if [ "$generatedocker" != "" ]; then 
         # echo yolo
-        mkdir -p "stable"$benchname"/recap" 
-        mv "$benchname"Test.md   "stable"$benchname"/recap"/ 
-        mv "$benchname"*.py "stable"$benchname"/recap"/
+        mkdir -p "stable"/$benchname"/recap" 
+        mv "$benchname"Test.md   "stable"/$benchname"/recap"/ 
+        mv "$benchname"*.py "stable"/$benchname"/recap"/
         python generator.py $benchname $(getbench "$benchname")
         rm "$benchname".log
         exit 

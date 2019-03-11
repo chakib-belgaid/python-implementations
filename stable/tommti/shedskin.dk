@@ -1,0 +1,7 @@
+
+FROM chakibmed/shedskin:1.0
+WORKDIR /test
+ADD pythonfiles/tommti.shedskin tommti
+ENTRYPOINT ["./tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

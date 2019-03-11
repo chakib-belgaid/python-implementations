@@ -1,0 +1,7 @@
+
+FROM chakibmed/numba3:1.0
+WORKDIR /test
+ADD pythonfiles/fannkuchredux.numba3 fannkuchredux
+ENTRYPOINT ["/usr/bin/python3","fannkuchredux"]
+CMD ["10", "0", "16"]
+    

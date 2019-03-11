@@ -1,0 +1,7 @@
+
+FROM chakibmed/graalpython:1.0
+WORKDIR /test
+ADD pythonfiles/tommti.graalpython tommti
+ENTRYPOINT ["/usr/bin/graalpython","tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

@@ -1,0 +1,7 @@
+
+FROM chakibmed/ipy:1.0
+WORKDIR /test
+ADD pythonfiles/tommti.ipy tommti
+ENTRYPOINT ["ipy","tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

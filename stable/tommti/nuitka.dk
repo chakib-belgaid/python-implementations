@@ -1,0 +1,7 @@
+
+FROM chakibmed/nuitka:1.0
+WORKDIR /test
+ADD pythonfiles/tommti.nuitka tommti
+ENTRYPOINT ["./tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

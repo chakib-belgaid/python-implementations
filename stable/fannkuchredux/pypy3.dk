@@ -1,0 +1,7 @@
+
+FROM chakibmed/pypy3:1.0
+WORKDIR /test
+ADD pythonfiles/fannkuchredux.pypy3 fannkuchredux
+ENTRYPOINT ["/usr/bin/pypy3","fannkuchredux"]
+CMD ["10", "0", "16"]
+    

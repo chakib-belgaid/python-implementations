@@ -1,0 +1,7 @@
+
+FROM chakibmed/python2:1.0
+WORKDIR /test
+ADD pythonfiles/fannkuchredux.python2 fannkuchredux
+ENTRYPOINT ["/usr/bin/python2","fannkuchredux"]
+CMD ["10", "0", "16"]
+    
