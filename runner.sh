@@ -57,12 +57,13 @@ numba2
 numba3 
 )
 
-benchs=(
-    tommti
-    binarytrees
-    chameneosredux
-    fannkuchredux
-)
+# benchs=(
+#     tommti
+#     binarytrees
+#     chameneosredux
+#     fannkuchredux
+#     fasta
+# )
 
 getbench(){ 
     benchs=(
@@ -70,6 +71,7 @@ getbench(){
         'binarytrees:2_0_1'
         'chameneosredux:60_0_1'
         'fannkuchredux:10_0_16'
+        'fasta:25_0_1'
     )
     benchname=$1 
 
@@ -86,9 +88,12 @@ getbench(){
 
 }
 
-while getopts "n:pd" o; do
+while getopts "b:n:pd" o; do
     case "${o}" in
-        n)
+        b) 
+            benchname=${OPTARG}
+            ;;
+        n)  
             name=${OPTARG}
             ;;
         p) 
@@ -116,7 +121,6 @@ function ispython3 ()
 'pypy3'
 'cython3'
 'nuitka '
-# 'shedskin'
 'activepython'
 'numba'
 'numba3'
@@ -155,28 +159,28 @@ preparetest() {
         "micropython") 
             sed 's/time/utime/g' $testname.py > "sources/"$dirname/$dirname"."$intername ;;
         "cython2")
-            docker run --rm -t --name "$intername"_compiler chakibmed/$intername:1.0
+            docker run --rm -dt --name "$intername"_compiler chakibmed/$intername:1.0
             docker exec -u root "$intername"_compiler mkdir /$testname && docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $testname.py  "$intername"_compiler:/$testname/$testname.py
             docker exec  "$intername"_compiler $intername -3 --embed -o $testname/$testname"_$intername".c /$testname/$testname.py && docker exec  "$intername"_compiler   gcc  -I /usr/include/python2.7 -O3 -o /$testname/$testname".$intername" /$testname/$testname"_$intername".c -lpython2.7 -lm -lutil -ldl 
-            docker cp "$intername"_compiler:/$testname/$testname".$intername" $dirname/$dirname".$intername"
+            docker cp "$intername"_compiler:/$testname/$testname".$intername" "sources"/$dirname/$dirname"."$intername
             docker stop "$intername"_compiler ;
-            docker rm -f "$intername"_compiler ;
+            # docker rm -f "$intername"_compiler ;
             ;;
         "cython3")
-            docker run --rm -t --name "$intername"_compiler chakibmed/$intername:1.0
+            docker run --rm -dt --name "$intername"_compiler chakibmed/$intername:1.0
             docker exec -u root "$intername"_compiler mkdir /$testname && docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $testname.py  "$intername"_compiler:/$testname/$testname.py
             docker exec  "$intername"_compiler $intername -3 --embed -o $testname/$testname"_$intername".c /$testname/$testname.py && docker exec  "$intername"_compiler   gcc  -I /usr/include/python3.7m -O3 -o $testname/$testname".$intername" $testname/$testname"_$intername".c -lpython3.7m -lm -lutil -ldl
-            docker cp "$intername"_compiler:/$testname/$testname".$intername" $dirname/$dirname".$intername"
+            docker cp "$intername"_compiler:/$testname/$testname".$intername" "sources"/$dirname/$dirname"."$intername
             docker stop "$intername"_compiler ;
-            docker rm -f "$intername"_compiler ;
+            # docker rm -f "$intername"_compiler ;
             # cython3 -3 --embed -o $dirname/$testname"_cython3".c $testname.py && gcc  -I /usr/include/python3.7m -O3 -o $dirname/$testname".cython3" $dirname/$testname"_cython3".c -lpython3.7m -lm -lutil -ldl && rm -f $dirname/$testname"_cython3".c 
             ;;
         "numba")
             sed 's/##lib--//g' $testname.py > "sources/"$dirname/$dirname"."$intername ;;
         "nuitka") 
-            docker run --rm -t --name "$intername"_compiler chakibmed/"$intername":1.0
+            docker run --rm -dt --name "$intername"_compiler chakibmed/"$intername":1.0
             docker exec -u root "$intername"_compiler mkdir /$testname 
             docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $testname.py  "$intername"_compiler:/$testname/$testname.py
@@ -187,7 +191,7 @@ preparetest() {
             
             ;; 
         "shedskin")
-            docker run --rm -t --name "$intername"_compiler chakibmed/"$intername":1.0
+            docker run --rm -dt --name "$intername"_compiler chakibmed/"$intername":1.0
             docker exec -u root "$intername"_compiler mkdir /$testname && docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $intername/$testname.$intername.py  "$intername"_compiler:/$testname/$testname.py
             docker exec -w /$testname -u root "$intername"_compiler shedskin -o -g  "$testname".py  && \
@@ -195,8 +199,8 @@ preparetest() {
             docker exec -w /$testname -u root "$intername"_compiler sed -i  's/CCFLAGS=-O2/CCFLAGS=-O3/' Makefile
             docker exec -w /$testname -u root "$intername"_compiler make 
             docker cp "$intername"_compiler:/$testname/$testname "sources/"$dirname/$dirname"."$intername
-            docker stop "$intername"_compiler ;
-            docker rm -f "$intername"_compiler ;
+            # docker stop "$intername"_compiler ;
+            # docker rm -f "$intername"_compiler ;
 
 
             # shedskin -o -g  $testname"_shedskin.py"  
@@ -262,7 +266,7 @@ test(){
 }
 
 inter=$1
-benchname=$2 
+# benchname=$2 
 if [ -z $benchname ] ; then 
     benchname="binarytrees"
 fi;

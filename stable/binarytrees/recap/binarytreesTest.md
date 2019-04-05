@@ -11,8 +11,8 @@
 - [X] pypy3
 - [X] graalpython
 - [ ] shedskin
-- [ ] nuitka
-- [ ] cython2
-- [ ] cython3
-- [ ] numba2
-- [ ] numba3
+- [X] nuitka
+- [X] cython2
+- [X] cython3
+- [X] numba2
+- [X] numba3

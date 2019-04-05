@@ -121,6 +121,7 @@ def generatelaucher(implementations=compilers+interpreters, benchmark="tommti",a
 min=2 
 max=120
 step=20
+sleepTime=120s
 
 implementations=( \
 """
@@ -150,10 +151,11 @@ tag="{1}"
     template=template+ 'for implem in ${implementations[@]};'
     template=template+ """
             do
+                sleep $sleepTime 
                 name=$tag"_"$implem"_"$function"_"$i"_"$j
                 echo $implem  $function 5 $i  $j ;
                 # docker pull chakibmed/icse_$implem:tommtiv1
-                ./tester.sh -n $name chakibmed/$implem:$tag $function 5 $i  ;
+                tester.sh -n $name chakibmed/$implem:$tag $function 5 $i  ;
                 # echo  chakibmed/$implem:$tag $function 5 $i  ;
             done
         j=$((j+1))  
