@@ -1,0 +1,7 @@
+
+FROM chakibmed/graalpython:1.0
+WORKDIR /test
+ADD pythonfiles/fasta.graalpython fasta
+ENTRYPOINT ["/usr/bin/graalpython","fasta"]
+CMD ["25", "0", "1"]
+    

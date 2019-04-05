@@ -142,7 +142,7 @@ tag="{1}"
 # do 
 """.format(args[0],benchmark,args[-1])
     template=template+ 'for function in "${functions[@]}" ; '
-    template=template+ """  
+    template=templa   te+ """  
     do 
         j=$((0))
         while [ $j -lt 100 ] ; 

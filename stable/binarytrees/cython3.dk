@@ -1,0 +1,7 @@
+
+FROM chakibmed/cython3:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.cython3 binarytrees
+ENTRYPOINT ["./binarytrees"]
+CMD ["2", "0", "1"]
+    

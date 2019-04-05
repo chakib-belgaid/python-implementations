@@ -1,0 +1,7 @@
+
+FROM chakibmed/numba2:1.0
+WORKDIR /test
+ADD pythonfiles/fasta.numba2 fasta
+ENTRYPOINT ["/usr/bin/python2","fasta"]
+CMD ["25", "0", "1"]
+    

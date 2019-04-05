@@ -1,0 +1,7 @@
+
+FROM chakibmed/graalpython:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.graalpython binarytrees
+ENTRYPOINT ["/usr/bin/graalpython","binarytrees"]
+CMD ["2", "0", "1"]
+    

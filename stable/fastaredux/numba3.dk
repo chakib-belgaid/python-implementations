@@ -1,0 +1,7 @@
+
+FROM chakibmed/numba3:1.0
+WORKDIR /test
+ADD pythonfiles/fastaredux.numba3 fastaredux
+ENTRYPOINT ["/usr/bin/python3","fastaredux"]
+CMD ["intArithmetic", "0", "1"]
+    

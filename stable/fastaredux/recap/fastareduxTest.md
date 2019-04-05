@@ -1,0 +1,23 @@
+# fastaredux
+- [X] python2
+- [X] python3
+- [X] intelpython2
+- [X] intelpython3
+- [X] ipy
+- [X] jython
+- [X] activepython
+- [ ] micropython
+- [X] pypy2
+- [X] pypy3
+- [ ] graalpython
+- [ ] shedskin
+- [X] nuitka
+- [X] cython2
+- [X] cython3
+- [X] numba2
+- [X] numba3
+
+
+# Remarks 
+- micropython bisec is not implemented 
+- 

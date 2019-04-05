@@ -1,0 +1,18 @@
+# binarytrees
+- [X] python2
+- [X] python3
+- [X] intelpython2
+- [X] intelpython3
+- [X] ipy
+- [X] jython
+- [X] activepython
+- [X] micropython
+- [X] pypy2
+- [X] pypy3
+- [X] graalpython
+- [ ] shedskin
+- [ ] nuitka
+- [ ] cython2
+- [ ] cython3
+- [ ] numba2
+- [ ] numba3

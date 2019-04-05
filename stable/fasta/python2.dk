@@ -1,0 +1,7 @@
+
+FROM chakibmed/python2:1.0
+WORKDIR /test
+ADD pythonfiles/fasta.python2 fasta
+ENTRYPOINT ["/usr/bin/python2","fasta"]
+CMD ["25", "0", "1"]
+    

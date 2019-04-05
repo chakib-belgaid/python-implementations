@@ -1,0 +1,7 @@
+
+FROM chakibmed/intelpython3:1.0
+WORKDIR /test
+ADD pythonfiles/fasta.intelpython3 fasta
+ENTRYPOINT ["/intelPython/intelpython3/bin/python","fasta"]
+CMD ["25", "0", "1"]
+    

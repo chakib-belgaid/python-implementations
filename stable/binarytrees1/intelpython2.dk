@@ -1,0 +1,7 @@
+
+FROM chakibmed/intelpython2:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.intelpython2 binarytrees
+ENTRYPOINT ["/intelPython/intelpython2/bin/python","binarytrees"]
+CMD ["2", "0", "1"]
+    

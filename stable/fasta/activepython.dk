@@ -1,0 +1,7 @@
+
+FROM chakibmed/activepython:1.0
+WORKDIR /test
+ADD pythonfiles/fasta.activepython fasta
+ENTRYPOINT ["/opt/ActivePython-3.6/bin/python3.6","fasta"]
+CMD ["25", "0", "1"]
+    

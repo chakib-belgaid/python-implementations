@@ -1,0 +1,7 @@
+
+FROM chakibmed/python3:1.0
+WORKDIR /test
+ADD pythonfiles/fastaredux.python3 fastaredux
+ENTRYPOINT ["/usr/bin/python3","fastaredux"]
+CMD ["intArithmetic", "0", "1"]
+    

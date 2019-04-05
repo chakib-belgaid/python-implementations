@@ -1,0 +1,7 @@
+
+FROM chakibmed/cython2:1.0
+WORKDIR /test
+ADD pythonfiles/fastaredux.cython2 fastaredux
+ENTRYPOINT ["./fastaredux"]
+CMD ["intArithmetic", "0", "1"]
+    

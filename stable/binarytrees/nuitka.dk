@@ -1,0 +1,7 @@
+
+FROM chakibmed/nuitka:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.nuitka binarytrees
+ENTRYPOINT ["./binarytrees"]
+CMD ["2", "0", "1"]
+    
