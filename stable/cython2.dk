@@ -1,0 +1,8 @@
+
+FROM chakibmed/cython2:1.0
+USER root
+WORKDIR /test
+COPY cython2 .
+ENTRYPOINT ["./binarytrees"]
+CMD ["8", "0", "2"]
+    

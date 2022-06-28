@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import sys 
 import re 
 import os 
@@ -6,7 +8,7 @@ from shutil import copyfile
 
 compilers=['shedskin','cython2','cython3','nuitka']
 # compilers=[]
-interpreters=["python2" ,"python3" ,"ipy" ,"jython" ,"activepython" ,"micropython" ,"pypy2" ,"pypy3" ,"graalpython" ,"numba2","numba3","intelpython2","intelpython3" ]
+interpreters=["python2" ,"python3" ,"ipy" ,"jython" ,"activepython" ,"micropython" ,"pypy2" ,"pypy3" ,"graalpython" ,"numba2","numba3","intelpython2","intelpython3","stacklesspython3","stacklesspython2" ]
 
 # def main(): 
 #     # filename= sys.argv[0] 
@@ -57,7 +59,7 @@ USER awesome
 #0}=impelemtation {1}= benchmark  {2}=entrypoint 
 
 def getEntryPoint(implem,bench):
-    paths={   "python2":"/usr/bin/python2",
+    paths={"python2":"/usr/bin/python2",
         "python3":"/usr/bin/python3",
         "numba2":"/usr/bin/python2",
         "numba3":"/usr/bin/python3",
@@ -75,28 +77,30 @@ def getEntryPoint(implem,bench):
         "stacklesspython3":"/stackless/stackless-372-export/python",
 
     }
-    if implem in   compilers : 
-        return '"./'+bench+'"'
-    elif implem in interpreters : 
-        return '"'+paths[implem]+'","'+bench+'"'
+    # if implem in   compilers : 
+        # return '"./'+bench+'"'
+    if implem in interpreters : 
+        return 'ENTRYPOINT ["'+paths[implem]+'","'+bench+'"]'
     
-    return "error"
+    return 'ENTRYPOINT ["./'+bench+'"]'
 
 
 def generateTestImages(implementations=compilers+interpreters, benchmark="tommti",args= ["intArithmetic","0","1"]): 
     
-    path="stable/"+benchmark
-    copyfile('dockerbuild.sh',path+'/dockerbuild.sh')
-    os.chmod(path+'/dockerbuild.sh',0755)
+    path="stable"
+    # copyfile('dockerbuild.sh',path+'/dockerbuild.sh')
+    # os.chmod(path+'/dockerbuild.sh',0755)
     template="""
 FROM chakibmed/{0}:1.0
+USER root
 WORKDIR /test
-ADD pythonfiles/{1}.{0} {1}
-ENTRYPOINT [{2}]
+COPY {0} .
+{2}
 CMD {3}
     """
     for implem in implementations : 
         # print (implem) 
+        # args[0]=benchmark if implem in interpreters else "./"+benchmark ; 
         with open(path+'/'+implem+'.dk','w+') as f :
             l=template.format(implem,benchmark,getEntryPoint(implem,benchmark),args)
             l=l.replace("'",'"')
@@ -115,7 +119,7 @@ def generatelaucher(implementations=compilers+interpreters, benchmark="tommti",a
     # print(implementations)
     # return 
     # implementations= [i.split('.')[1] for i in os.listdir("stable/"+benchmark) ]
-    path="stable/"+benchmark
+    path="stable/"
     filename='launcher.'+benchmark+'.sh'
     template= """
 min=2 
@@ -142,7 +146,7 @@ tag="{1}"
 # do 
 """.format(args[0],benchmark,args[-1])
     template=template+ 'for function in "${functions[@]}" ; '
-    template=templa   te+ """  
+    template=template+ """  
     do 
         j=$((0))
         while [ $j -lt 100 ] ; 
@@ -172,18 +176,18 @@ shutdown
     
     with open(path+'/'+filename,'w+') as f :    
         f.write(template)
-    os.chmod(path+'/'+filename, 0755  )
+    # os.chmod(path+'/'+filename, 755 )
 
 
 
 def main(): 
     benchmark = sys.argv[1] if len (sys.argv) > 1 else 'tommti' 
     args = sys.argv[2:] if len(sys.argv) >2 else ["intArithmetic","0","1"]
-    implementations= [i.split('.')[1] for i in os.listdir("stable/"+benchmark+'/pythonfiles') ]
+    implementations= [i for i in os .listdir("stable/") if os.path.isdir("stable/"+i) and  benchmark in os.listdir("stable/"+i)]
     # print (implementations)
     # print(args)
     generateTestImages(implementations,benchmark,args)
-    generatelaucher(implementations,benchmark,args)
+    # generatelaucher(implementations,benchmark,args)
 
 
 

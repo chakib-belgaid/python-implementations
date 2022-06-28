@@ -108,19 +108,19 @@ def trig(selfi, trigMax):
 
 ##lib--@jit	 
 def io(selfi, ioMax):
-    filename = "/TestCSharp.txt"
+    filename = "sample.txt"
     textLine = "abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefgh\n"
     i = 0
     myLine = ""
     try:
-        streamWriter = file(filename, 'w')
+        streamWriter = open(filename, 'w')
         while (i<=ioMax):
             i = i + 1
             streamWriter.write(textLine)
         streamWriter.close()
         i = 0
         # print("Reading file...")
-        streamReader = file(filename, 'r')
+        streamReader = open(filename, 'r')
         while(i<=ioMax):
             i = i + 1
             myLine = streamReader.readline()
@@ -327,17 +327,17 @@ def vector(selfi, n):
  		
 
 ##lib--@jit
-def mkmatrix(selfi, rows, cols):
-    count = 1
-    m = [None]*rows
-    i = 0
-    j = 0
-    for i in range(rows):
-        m[i] = [None] * cols
-        for j in range(cols):
-            count = count + 1
-            m[i][j] = count
-    return m
+# def mkmatrix(selfi, rows, cols):
+#     count = 1
+#     m = [None]*rows
+#     i = 0
+#     j = 0
+#     for i in range(rows):
+#         m[i] = [None] * cols
+#         for j in range(cols):
+#             count = count + 1
+#             m[i][j] = count
+#     return m
 
 ##lib--@jit
 def mmult(selfi, rows, cols, m1, m2, m3):
@@ -352,16 +352,16 @@ def mmult(selfi, rows, cols, m1, m2, m3):
             m3[i][j] = val
 
 ##lib--@jit
-def matrixMultiply(selfi, n):
-    m1 = mkmatrix(selfi,selfi["mSIZE"], selfi["mSIZE"])
-    m2 = mkmatrix(selfi,selfi["mSIZE"], selfi["mSIZE"])
-    mm = mkmatrix(selfi,selfi["mSIZE"], selfi["mSIZE"])
-    i = 0
-    if (n<1):
-        n = 1
-    for i in range(n):
-        mmult(selfi,selfi["mSIZE"], selfi["mSIZE"], m1, m2, mm)
-    return True
+# def matrixMultiply(selfi, n):
+#     m1 = mkmatrix(selfi,selfi["mSIZE"], selfi["mSIZE"])
+#     m2 = mkmatrix(selfi,selfi["mSIZE"], selfi["mSIZE"])
+#     mm = mkmatrix(selfi,selfi["mSIZE"], selfi["mSIZE"])
+#     i = 0
+#     if (n<1):
+#         n = 1
+#     for i in range(n):
+#         mmult(selfi,selfi["mSIZE"], selfi["mSIZE"], m1, m2, mm)
+#     return True
  		
 
 ##lib--@jit
@@ -405,142 +405,198 @@ def stringConcat(selfi, N):
 
 def __intArithmetic():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         intArithmetic(selfi,intMax)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         intArithmetic(selfi,intMax)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __doubleArithmetic():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         doubleArithmetic(selfi,doubleMin, doubleMax)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         doubleArithmetic(selfi,doubleMin, doubleMax)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __longArithmetic():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         longArithmetic(selfi,longMin, longMax)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         longArithmetic(selfi,longMin, longMax)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __trig():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         trig(selfi,trigMax)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         trig(selfi,trigMax)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __array():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         marray(selfi,10)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         marray(selfi,10)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __hashtest():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         hashtest(selfi,2000)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         hashtest(selfi,2000)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __hashes():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup):     # 
         hashes(selfi,10)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         hashes(selfi,10)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __heapsort():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         heapsort(selfi,400)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         heapsort(selfi,400)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __vector():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         vector(selfi,20)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         vector(selfi,20)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 # def __matrixMultiply():
 #     # warmup 
-#     print("--++beginwarmup")
+#     t = time.time()  
+#     print ('--++ '+ str(t))
 #     for i in range(warmup): 
 #             matrixMultiply(selfi,1)
-#     print("++--endwarmup")
+#     t = time.time()
+#     print ('++-- '+ str(t))
 #     for i in range(mainloop) : 
 #         matrixMultiply(selfi,1)
+#     t = time.time() 
+#     print ('---- '+ str(t))
     
 
 def __nestedLoop():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         nestedLoop(selfi,5)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         nestedLoop(selfi,5)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __stringConcat():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
-        stringConcat(selfi,40000)
-    print("++--endwarmup")
+        stringConcat(selfi,500)
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
-        stringConcat(selfi,40000)
+        stringConcat(selfi,500)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __io():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         io(selfi,ioMax)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop):
         io(selfi,ioMax) 
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 def __except():
     # warmup 
-    print("--++beginwarmup")
+    t = time.time()  
+    print ('--++ '+ str(t))
     for i in range(warmup): 
         exceptF(selfi,1500)
-    print("++--endwarmup")
+    t = time.time()
+    print ('++-- '+ str(t))
     for i in range(mainloop) : 
         exceptF(selfi,1500)
+    t = time.time() 
+    print ('---- '+ str(t))
     
 
 
@@ -572,7 +628,7 @@ if __name__ == "__main__":
             elif bench == "vector" : 
                         __vector()
             # elif bench == "matrixMultiply" : 
-                        # __matrixMultiply()
+            #             __matrixMultiply()
             elif bench == "nestedLoop" : 
                         __nestedLoop()
             elif bench == "stringConcat" : 

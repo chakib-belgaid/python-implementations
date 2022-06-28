@@ -1,0 +1,7 @@
+
+FROM chakibmed/activepython:1.0
+WORKDIR /test
+ADD pythonfiles/binarytrees.activepython binarytrees
+ENTRYPOINT ["/opt/ActivePython-3.6/bin/python3.6"]
+CMD ["binarytrees","2", "0", "1"]
+    

@@ -1,0 +1,8 @@
+
+FROM chakibmed/pypy2:1.0
+USER root
+WORKDIR /test
+COPY pypy2 .
+ENTRYPOINT ["/usr/bin/pypy","binarytrees"]
+CMD ["8", "0", "2"]
+    

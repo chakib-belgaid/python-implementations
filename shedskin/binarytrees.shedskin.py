@@ -7,7 +7,7 @@
 from __future__ import print_function
 
 import sys
-# import multiprocessing as mp
+import multiprocessing as mp
 ##lib--from numba import jit 
 
 ##lib--@jit
@@ -52,11 +52,11 @@ def main(n, min_depth=4):
 
     max_depth = max(min_depth + 2, n)
     stretch_depth = max_depth + 1
-    # if mp.cpu_count() > 1:
-        # pool = mp.Pool()
-        # chunkmap = pool.map
-    # else:
-    chunkmap = map
+    if mp.cpu_count() > 1:
+        pool = mp.Pool()
+        chunkmap = pool.map
+    else:
+        chunkmap = map
     
     print('stretch tree of depth {0}\t check: {1}'.format( 
           stretch_depth, make_check((0, stretch_depth))))
@@ -76,4 +76,17 @@ def main(n, min_depth=4):
 
 
 if __name__ == '__main__':
-    main(int(sys.argv[1]))
+    depth =int(sys.argv[1] ) if len(sys.argv ) > 1 else 10
+    warmup = int(sys.argv[2]) if len(sys.argv ) > 2 else 0
+    mainloop = int(sys.argv[3]) if len(sys.argv ) >3 else 1    
+    # warmup 
+    t=time.time()
+    print("--++ %f"%t)
+    for i in range(warmup): 
+        main(depth)
+    t=time.time()
+    print("++-- %f"%t)
+    for i in range(mainloop) : 
+        main(depth)
+    t=time.time()
+    print("---- %f"%t)

@@ -16,8 +16,8 @@ getPath() {
     "activepython:/opt/ActivePython-3.6/bin/python3.6"
     "intelpython2:/intelPython/intelpython2/bin/python"
     "intelpython3:/intelPython/intelpython3/bin/python"
-    "stacklesspython2:/stackless/stackless-2715-export/python",
-    "stacklesspython3:/stackless/stackless-372-export/python",
+    "stacklesspython2:/stackless/stackless-2715-export/python"
+    "stacklesspython3:/stackless/stackless-372-export/python"
     )
 
     i=$1 
@@ -41,6 +41,8 @@ python2
 python3
 intelpython2
 intelpython3
+stacklesspython2
+stacklesspython3
 ipy
 jython
 activepython
@@ -67,11 +69,12 @@ numba3
 
 getbench(){ 
     benchs=(
-        'tommti:intArithmetic_0_50'
+        'tommti:intArithmetic_0_1'
         'binarytrees:2_0_1'
         'chameneosredux:60_0_1'
         'fannkuchredux:10_0_16'
         'fasta:25_0_1'
+        'sleep:1_1'
     )
     benchname=$1 
 
@@ -126,6 +129,7 @@ function ispython3 ()
 'numba3'
 'micropython'
 'graalpython'
+'stacklesspython3'
 )
 
     for i in ${py3interpereters[@]} ; do 
@@ -157,12 +161,12 @@ preparetest() {
     ls sources/$dirname >/dev/null|| mkdir sources/$dirname
     case "$intername" in 
         "micropython") 
-            sed 's/time/utime/g' $testname.py > "sources/"$dirname/$dirname"."$intername ;;
+            sed 's/ time/ utime/g' $testname.py > "sources/"$dirname/$dirname"."$intername ;;
         "cython2")
             docker run --rm -dt --name "$intername"_compiler chakibmed/$intername:1.0
             docker exec -u root "$intername"_compiler mkdir /$testname && docker exec -u root "$intername"_compiler chown awesome /$testname
             docker cp $testname.py  "$intername"_compiler:/$testname/$testname.py
-            docker exec  "$intername"_compiler $intername -3 --embed -o $testname/$testname"_$intername".c /$testname/$testname.py && docker exec  "$intername"_compiler   gcc  -I /usr/include/python2.7 -O3 -o /$testname/$testname".$intername" /$testname/$testname"_$intername".c -lpython2.7 -lm -lutil -ldl 
+            docker exec  "$intername"_compiler $intername -2 --embed -o $testname/$testname"_$intername".c /$testname/$testname.py && docker exec  "$intername"_compiler   gcc  -I /usr/include/python2.7 -O3 -o /$testname/$testname".$intername" /$testname/$testname"_$intername".c -lpython2.7 -lm -lutil -ldl 
             docker cp "$intername"_compiler:/$testname/$testname".$intername" "sources"/$dirname/$dirname"."$intername
             docker stop "$intername"_compiler ;
             # docker rm -f "$intername"_compiler ;
@@ -177,7 +181,7 @@ preparetest() {
             # docker rm -f "$intername"_compiler ;
             # cython3 -3 --embed -o $dirname/$testname"_cython3".c $testname.py && gcc  -I /usr/include/python3.7m -O3 -o $dirname/$testname".cython3" $dirname/$testname"_cython3".c -lpython3.7m -lm -lutil -ldl && rm -f $dirname/$testname"_cython3".c 
             ;;
-        "numba")
+        "numba2"|"numba3")
             sed 's/##lib--//g' $testname.py > "sources/"$dirname/$dirname"."$intername ;;
         "nuitka") 
             docker run --rm -dt --name "$intername"_compiler chakibmed/"$intername":1.0
@@ -199,8 +203,8 @@ preparetest() {
             docker exec -w /$testname -u root "$intername"_compiler sed -i  's/CCFLAGS=-O2/CCFLAGS=-O3/' Makefile
             docker exec -w /$testname -u root "$intername"_compiler make 
             docker cp "$intername"_compiler:/$testname/$testname "sources/"$dirname/$dirname"."$intername
-            # docker stop "$intername"_compiler ;
-            # docker rm -f "$intername"_compiler ;
+            docker stop "$intername"_compiler ;
+            docker rm -f "$intername"_compiler ;
 
 
             # shedskin -o -g  $testname"_shedskin.py"  
@@ -218,7 +222,7 @@ preparetest() {
 generateTestfile()
 {
     echo '# '$benchname > $benchname'Test.md'
-    mkdir -p "stable"/$benchname"/pythonfiles" 
+    # mkdir -p "stable"/$benchname"/pythonfiles" 
     for i in ${interpreters[@]}; do 
         echo '- [ ] '$i >> $benchname'Test.md'
     done 
@@ -227,8 +231,6 @@ generateTestfile()
 test(){
     intername=$1 
     benchname=$2 
-    bench_params=$(getbench "$benchname")
-
     echo $intername $benchname $bench_params
     if [ "$prepare" != "" ]; then 
         preparetest $intername $benchname;
@@ -256,7 +258,7 @@ test(){
         sed   "s/\- \[ \] $intername/\- \[X\] $intername/ "  "$benchname"Test.md > tmp.log 
         cat tmp.log >  "$benchname"Test.md 
         rm -f tmp.log
-        cp sources/$benchname/$benchname.$intername "stable"/$benchname/'pythonfiles'/$benchname.$intername 
+        cp sources/$benchname/$benchname.$intername "stable"/$intername/$benchname
         # echo "- [X] $intername " >> "$benchname"Test.md; 
     # else 
         # mv "$benchname"/
@@ -266,17 +268,25 @@ test(){
 }
 
 inter=$1
+shift 
+bench_params=$@
+
+if [ -z $bench_params ] ; then 
+    bench_params=$(getbench "$benchname")
+fi;
+
 # benchname=$2 
 if [ -z $benchname ] ; then 
-    benchname="binarytrees"
+    benchname="tommti"
+    echo $benchname
 fi;
 
 if [ "$generatedocker" != "" ]; then 
         # echo yolo
-        mkdir -p "stable"/$benchname"/recap" 
-        mv "$benchname"Test.md   "stable"/$benchname"/recap"/ 
-        mv "$benchname"*.py "stable"/$benchname"/recap"/
-        python generator.py $benchname $(getbench "$benchname")
+        mkdir -p "recap/"$benchname 
+        mv "$benchname"Test.md   "recap/"$benchname/ 
+        mv "$benchname"*.py "recap/"$benchname/
+        # python generator.py $benchname $(getbench "$benchname")
         rm "$benchname".log
         exit 
 fi 

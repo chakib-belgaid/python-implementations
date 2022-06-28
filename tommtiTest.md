@@ -1,0 +1,20 @@
+# tommti
+- [ ] python2
+- [ ] python3
+- [ ] intelpython2
+- [ ] intelpython3
+- [ ] stacklesspython2
+- [ ] stacklesspython3
+- [ ] ipy
+- [ ] jython
+- [ ] activepython
+- [ ] micropython
+- [ ] pypy2
+- [ ] pypy3
+- [ ] graalpython
+- [ ] shedskin
+- [X] nuitka
+- [X] cython2
+- [X] cython3
+- [ ] numba2
+- [ ] numba3

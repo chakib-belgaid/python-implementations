@@ -1,0 +1,8 @@
+
+FROM chakibmed/python3:1.0
+USER root
+WORKDIR /test
+COPY python3 .
+ENTRYPOINT ["/usr/bin/python3","binarytrees"]
+CMD ["8", "0", "2"]
+    

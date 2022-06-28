@@ -1,0 +1,8 @@
+
+FROM chakibmed/micropython:1.0
+USER root
+WORKDIR /test
+COPY micropython .
+ENTRYPOINT ["micropython","binarytrees"]
+CMD ["8", "0", "2"]
+    

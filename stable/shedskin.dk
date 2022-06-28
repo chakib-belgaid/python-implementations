@@ -1,0 +1,8 @@
+
+FROM chakibmed/shedskin:1.0
+USER root
+WORKDIR /test
+COPY shedskin .
+ENTRYPOINT ["./tommti"]
+CMD ["intArithmetic", "0", "1"]
+    

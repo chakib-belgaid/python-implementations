@@ -1,0 +1,8 @@
+
+FROM chakibmed/ipy:1.0
+USER root
+WORKDIR /test
+COPY ipy .
+ENTRYPOINT ["ipy","binarytrees"]
+CMD ["8", "0", "2"]
+    

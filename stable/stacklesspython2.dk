@@ -1,0 +1,8 @@
+
+FROM chakibmed/stacklesspython2:1.0
+USER root
+WORKDIR /test
+COPY stacklesspython2 .
+ENTRYPOINT ["/stackless/stackless-2715-export/python","binarytrees"]
+CMD ["8", "0", "2"]
+    

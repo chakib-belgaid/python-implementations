@@ -1,0 +1,8 @@
+
+FROM chakibmed/nuitka:1.0
+USER root
+WORKDIR /test
+COPY nuitka .
+ENTRYPOINT ["./binarytrees"]
+CMD ["8", "0", "2"]
+    
